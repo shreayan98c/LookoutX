@@ -1,2 +1,11 @@
 pyttsx3
 opencv-python
+
+click
+rich
+pre-commit
+black
+flake8
+pytest
+reorder-python-imports
+toml
