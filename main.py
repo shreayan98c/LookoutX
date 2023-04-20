@@ -1,6 +1,5 @@
-from LookoutX import utils
-from LookoutX.dataset import MyDataset
-from LookoutX.model import MyModel
+from LookoutX.utils import read_config
+from LookoutX.dataset import stream
 import click
 from rich.logging import RichHandler
 import logging
@@ -17,27 +16,19 @@ def cli():
 
 
 @cli.command()
-@click.option("--batch-size", default=32)
-@click.option("--epochs", default=10)
-@click.option("--lr", default=1e-3)
-@click.option("--levels", default=3)
-@click.option("--log-interval", default=100, help="Number of batches between logging")
-def train(batch_size: int, epochs: int, lr: float, levels: int, log_interval: int):
-    train_dataset = MyDataset(train=True)
-    test_dataset = MyDataset(train=False)
+# @click.option("--batch-size", default=32)
+# @click.option("--epochs", default=10)
+# @click.option("--lr", default=1e-3)
+# @click.option("--log-interval", default=100, help="Number of batches between logging")
+def train():
 
-    model = MyModel(levels=levels)
+    # read config file and get the wifi ip and port
+    config = read_config(path='config.ini', section='Livestream')
 
-    utils.train(
-        model=model,
-        train_dataset=train_dataset,
-        test_dataset=test_dataset,
-        batch_size=batch_size,
-        epochs=epochs,
-        lr=lr,
-        logging_interval=log_interval,
-    )
+    # extract the video and audio streams from the url
+    stream(wifi_ip=config['wifi_ip'], port=config['port'])
 
 
 if __name__ == "__main__":
-    cli()
+    # cli()
+    train()

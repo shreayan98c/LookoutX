@@ -1,37 +1,14 @@
-import numpy
-import torch
-from torchvision.datasets import MNIST
+import cv2  # OpenCV library
+import time
+import requests  # python http library
+# import pyaudio  # python audio library
+import pyttsx3  # python text to speech library
+# import speech_recognition as sr  # python speech recognition library
+import numpy as np  # python numerical library
+# import matplotlib.pyplot as plt
 
 
-class MyDataset():
-    def __init__(self, train=True):
-        self.data = MNIST(root="data", train=train, download=True)
-
-    def __getitem__(self, index):
-        img, target = self.data[index]
-        img = numpy.array(img)
-        img = img / 255.0
-        img = img.astype(numpy.float32)
-        img = torch.from_numpy(img)
-        img = img.unsqueeze(0)
-
-        target = torch.tensor(target, dtype=torch.long)
-        return img, target
-
-    def __len__(self):
-        return len(self.data)
-
-
-def stream():
-    import cv2  # OpenCV library
-    import time
-    import pyttsx3  # python text to speech library
-    import matplotlib.pyplot as plt
-
-    # CONFIG for the video stream
-    # wifi_ip = '10.0.0.203'
-    wifi_ip = '10.203.35.234'
-    port = '4747'
+def stream(wifi_ip, port):
 
     livestream_url = f'http://{wifi_ip}:{port}/video'
 
