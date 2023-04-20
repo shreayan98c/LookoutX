@@ -1,5 +1,6 @@
 pyttsx3
 opencv-python
+matplotlib
 
 click
 rich
