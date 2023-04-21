@@ -2,6 +2,7 @@ pyttsx3
 opencv-python
 matplotlib
 requests
+PyAudio
 
 click
 rich
