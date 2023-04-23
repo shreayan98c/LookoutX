@@ -62,12 +62,14 @@ def generate_text(model, image_processor, tokenizer, image, text: str):
         ).raw
     )
 
-    query_image = Image.open(
-        requests.get(
-            "http://images.cocodataset.org/test-stuff2017/000000028352.jpg",
-            stream=True
-        ).raw
-    )
+    # query_image = Image.open(
+    #     requests.get(
+    #         "http://images.cocodataset.org/test-stuff2017/000000028352.jpg",
+    #         stream=True
+    #     ).raw
+    # )
+    f = open(image, 'rb')
+    query_image = Image.open(f)
 
     """
     Step 2: Preprocessing images
@@ -81,7 +83,7 @@ def generate_text(model, image_processor, tokenizer, image, text: str):
                 image_processor(query_image).unsqueeze(0)]
     vision_x = torch.cat(vision_x, dim=0)
     vision_x = vision_x.unsqueeze(1).unsqueeze(0)
-
+    f.close()
     """
     Step 3: Preprocessing text
     Details: In the text we expect an <image> special token to indicate where an image is.
@@ -91,7 +93,8 @@ def generate_text(model, image_processor, tokenizer, image, text: str):
     tokenizer.padding_side = "left"  # For generation padding tokens should be on the left
     lang_x = tokenizer(
         [
-            "<image>An image of two cats.<|endofchunk|><image>An image of a bathroom sink.<|endofchunk|><image>An image of"],
+            f"<image>An image of two cats.<|endofchunk|><image>An image of a bathroom sink.<|endofchunk|><image>{text}"
+        ],
         return_tensors="pt",
     )
 
@@ -108,12 +111,13 @@ def generate_text(model, image_processor, tokenizer, image, text: str):
         top_k=60,
         temperature=0.7,
         num_return_sequences=1,
-        repetition_penalty=1.2,
         length_penalty=1.0,
         early_stopping=True,
     )
 
     generated_text = tokenizer.decode(generated_text[0])
+    last_idx = generated_text.rfind(f"{text}")
+    generated_text = generated_text[last_idx + len(f"{text}"):]
     print("Generated text: ", generated_text)
     return generated_text
 
@@ -147,12 +151,10 @@ def main():
     model, image_processor, tokenizer = load_openflamingo_model(
         llama_model_path="C:\\NonOSFiles\\BlueJayCodes\\LLaMA\\llama-7b-hf")
 
-    sample_image = Image.open("test_data\\lambo.png")
+    sample_image = "test_data\\lambo.jpg"
 
     # generate the text
     generated_text = generate_text(model, image_processor, tokenizer, sample_image, "what is this?")
-
-    print(generated_text)
 
 
 if __name__ == '__main__':
