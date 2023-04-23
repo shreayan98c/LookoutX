@@ -32,6 +32,7 @@ remaining packages with:
 ```bash
 conda activate lookoutx
 pip install -r requirements.txt
+pip install git+https://github.com/zphang/transformers.git@68d640f7c368bcaaaecfc678f11908ebbd3d6176
 pip install -e .
 ```
 
