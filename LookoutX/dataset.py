@@ -14,7 +14,7 @@ import numpy as np
 import sched
 import sys
 
-wifi_ip = '10.203.62.149'
+wifi_ip = '10.203.190.99'
 port = '4747'
 
 livestream_url = f'http://{wifi_ip}:{port}/video'
@@ -33,9 +33,11 @@ model = whisper.load_model("base")
 frames = []
 video = cv2.VideoCapture(livestream_url)
 
+
 def callback(in_data, frame_count, time_info, status):
     frames.append(in_data)
     return (in_data, pyaudio.paContinue)
+
 
 class MyListener(keyboard.Listener):
     def __init__(self):
@@ -45,6 +47,7 @@ class MyListener(keyboard.Listener):
         self.wf.setnchannels(CHANNELS)
         self.wf.setsampwidth(p.get_sample_size(FORMAT))
         self.wf.setframerate(RATE)
+
     def on_press(self, key):
         if key.char == 'r':
             self.key_pressed = True
@@ -53,11 +56,14 @@ class MyListener(keyboard.Listener):
     def on_release(self, key):
         if key.char == 'r':
             self.key_pressed = False
-        return 
+        return
+
+
 listener = MyListener()
 listener.start()
 started = False
 stream = None
+
 
 def recorder():
     global started, p, stream, frames
@@ -65,7 +71,6 @@ def recorder():
     if (not listener.key_pressed) and (not started):
         # Read a frame from the video stream
         check, frame = video.read()
-
 
         # Waiting for 1ms
         key = cv2.waitKey(1)
@@ -75,11 +80,11 @@ def recorder():
         # Start the recording
         try:
             stream = p.open(format=FORMAT,
-                             channels=CHANNELS,
-                             rate=RATE,
-                             input=True,
-                             frames_per_buffer=CHUNK,
-                             stream_callback = callback)
+                            channels=CHANNELS,
+                            rate=RATE,
+                            input=True,
+                            frames_per_buffer=CHUNK,
+                            stream_callback=callback)
             print("Stream active:", stream.is_active())
             started = True
             print("start Stream")
@@ -92,12 +97,12 @@ def recorder():
         stream.close()
         p.terminate()
         listener.wf.writeframes(b''.join(frames))
-        wf = wave.open(WAVE_OUTPUT_FILENAME, 'rb') 
+        wf = wave.open(WAVE_OUTPUT_FILENAME, 'rb')
         # I'd like to drop the middleman of writing to a file and just read from listener.wf, but that's tricky(?)
         audio_bytes = wf.readframes(wf.getnframes())
         listener.wf.close()
         audio_data = np.frombuffer(audio_bytes, dtype=np.float32)
-        result = model.transcribe(WAVE_OUTPUT_FILENAME) # send the file to transcibe here
+        result = model.transcribe(WAVE_OUTPUT_FILENAME)  # send the file to transcibe here
         print(result["text"])
 
         video.release()
@@ -109,10 +114,11 @@ def recorder():
         stream.stop_stream()
         stream.close()
         p.terminate()
-        
-        sys.exit() # TODO: Don't exit, just restart the whole process after one query!
+
+        sys.exit()  # TODO: Don't exit, just restart the whole process after one query!
     # Reschedule the recorder function in 100 ms.
     task.enter(0.1, 1, recorder, ())
+
 
 print("Press and hold the 'r' key to begin recording")
 print("Release the 'r' key to end recording")
@@ -125,8 +131,6 @@ task.run()
 #     #output_audio_file = 'audio_output.wav'
 
 #     # Initializing video
-    
-
 
 
 #     # Make a GET request to the DroidCam app to start the audio stream
@@ -138,6 +142,6 @@ task.run()
 #     task.run()
 
 #     # Initialize the flag variable
-    
+
 
 #     # Release the VideoCapture object

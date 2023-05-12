@@ -9,6 +9,7 @@ setuptools==66.0.0
 click==8.1.3
 rich==13.3.4
 matplotlib
+pynput==1.7.6
 
 pre-commit
 black

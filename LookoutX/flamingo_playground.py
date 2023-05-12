@@ -32,6 +32,9 @@ def load_openflamingo_model(llama_model_path: str) -> (torch.nn.Module, torch.nn
     # grab model checkpoint from huggingface hub
     checkpoint_path = hf_hub_download("openflamingo/OpenFlamingo-9B", "checkpoint.pt")
     model.load_state_dict(torch.load(checkpoint_path), strict=False)
+    print(f"Is model is on GPU?: {next(model.parameters()).is_cuda}")
+    # model.to("cuda:0")
+    # print(f"Is model is on GPU?: {next(model.parameters()).is_cuda}")
 
     return model, image_processor, tokenizer
 
@@ -151,10 +154,10 @@ def main():
     model, image_processor, tokenizer = load_openflamingo_model(
         llama_model_path="C:\\NonOSFiles\\BlueJayCodes\\LLaMA\\llama-7b-hf")
 
-    sample_image = "test_data\\lambo.jpg"
+    sample_image = "test_data\\coffee_shop.jpg"
 
     # generate the text
-    generated_text = generate_text(model, image_processor, tokenizer, sample_image, "what is this?")
+    generated_text = generate_text(model, image_processor, tokenizer, sample_image, "is the coffee shop open?")
 
 
 if __name__ == '__main__':
