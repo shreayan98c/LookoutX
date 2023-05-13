@@ -1,18 +1,13 @@
 import cv2  # OpenCV library
+import sys
 import time
 import wave
-import requests  # python http library
-import pyaudio  # python audio library
-import pyttsx3  # python text to speech library
-# import speech_recognition as sr  # python speech recognition library
-import numpy as np  # python numerical library
-# import matplotlib.pyplot as plt
-from pynput import keyboard
-import wave
-import whisper
-import numpy as np
 import sched
-import sys
+import whisper
+import pyaudio
+import numpy as np
+from pynput import keyboard
+from LookoutX.flamingo_playground import load_openflamingo_model, generate_text
 
 wifi_ip = '10.203.190.99'
 port = '4747'
@@ -115,6 +110,15 @@ def recorder():
         stream.stop_stream()
         stream.close()
         p.terminate()
+
+        text = result["text"]
+        model_flamingo, image_processor, tokenizer = load_openflamingo_model(
+            llama_model_path="C:\\NonOSFiles\\BlueJayCodes\\LLaMA\\llama-7b-hf")
+
+        sample_image = "frame.jpg"
+
+        # generate the text
+        generated_text = generate_text(model_flamingo, image_processor, tokenizer, sample_image, text)
 
         sys.exit()  # TODO: Don't exit, just restart the whole process after one query!
     # Reschedule the recorder function in 100 ms.
