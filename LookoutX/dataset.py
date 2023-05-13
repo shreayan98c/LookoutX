@@ -18,7 +18,6 @@ wifi_ip = '10.203.190.99'
 port = '4747'
 
 livestream_url = f'http://{wifi_ip}:{port}/video'
-audio_url = f'http://{wifi_ip}:{port}/audio.wav'
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
@@ -88,6 +87,8 @@ def recorder():
             print("Stream active:", stream.is_active())
             started = True
             print("start Stream")
+            check, frame = video.read()
+            cv2.imwrite('frame.jpg', frame)
         except:
             raise
 

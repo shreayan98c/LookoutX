@@ -9,15 +9,14 @@ the response.
 
 ## Technologies used:
 
-OpenCV for capturing and processing real-time video
-SpeechRecognition for audio to text
-CLIP for model
-pyttsx for converting text to speech
+1. DroidCam for streaming video from phone to the system
+2. OpenCV for capturing and processing real-time video
+3. OpenAI Whisper for converting speech to text
+4. OpenFlamingo (LLaMA 7B + CLIP ViT/L-14) Vision-Language Model
 
-## Data Pipeline
+## Architecture
 
-Data Collection for video stream and audio stream -> SpeechRecognition speech to text -> Model Training -> Model
-Evaluation -> Py text to speech
+![Architecture](LookoutX/test_data/architecture.png)
 
 ## Installation
 
