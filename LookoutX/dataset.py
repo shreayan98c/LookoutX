@@ -60,7 +60,7 @@ stream = None
 
 
 def recorder():
-    global started, p, stream, frames
+    global started, p, stream, frames, model
 
     if (not listener.key_pressed) and (not started):
         # Read a frame from the video stream
@@ -99,7 +99,10 @@ def recorder():
         listener.wf.close()
         audio_data = np.frombuffer(audio_bytes, dtype=np.float32)
         result = model.transcribe(WAVE_OUTPUT_FILENAME)  # send the file to transcibe here
-        print(result["text"])
+        transcribed_text = result["text"]
+        print(transcribed_text)
+        del model
+        print('closed whisper model')
 
         video.release()
 
@@ -111,7 +114,7 @@ def recorder():
         stream.close()
         p.terminate()
 
-        text = result["text"]
+        text = transcribed_text
         model_flamingo, image_processor, tokenizer = load_openflamingo_model(
             llama_model_path="C:\\NonOSFiles\\BlueJayCodes\\LLaMA\\llama-7b-hf")
 
@@ -119,6 +122,7 @@ def recorder():
 
         # generate the text
         generated_text = generate_text(model_flamingo, image_processor, tokenizer, sample_image, text)
+        print('text is generated, it should exit gracefully now')
 
         sys.exit()  # TODO: Don't exit, just restart the whole process after one query!
     # Reschedule the recorder function in 100 ms.
