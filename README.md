@@ -7,6 +7,12 @@ A smart assistant for the visually impaired, to make their lives easier.
 Goal is to guide the visually impaired user via audio by answering their questions and queries and providing them with
 the response.
 
+## Demo
+
+<a href="https://www.youtube.com/embed/YNT_FSTY52A" target="_blank"><img src="https://img.youtube.com/vi/YNT_FSTY52A/0.jpg" alt="LookoutX: Smart Assistant for the Visually Impaired" width="400" height="300"/></a>
+
+**YouTube Link:** https://youtu.be/YNT_FSTY52A
+
 ## Technologies used:
 
 1. DroidCam for streaming video from phone to the system
